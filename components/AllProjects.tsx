@@ -26,9 +26,9 @@ const AllProjects: React.FC<AllProjectsProps> = ({ }) => {
   };
 
   useEffect(() => {
-    const fetchAllProjects = async () => {
+    const loadAllProjects = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/projects');
+        const response = await fetch('/projects.json'); // Carrega do arquivo estático
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -41,7 +41,7 @@ const AllProjects: React.FC<AllProjectsProps> = ({ }) => {
       }
     };
 
-    fetchAllProjects();
+    loadAllProjects();
     window.scrollTo(0, 0);
   }, []);
 

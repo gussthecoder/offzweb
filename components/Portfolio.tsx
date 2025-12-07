@@ -16,14 +16,14 @@ const Portfolio: React.FC<PortfolioProps> = ({ }) => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchProjects = async () => {
+    const loadProjects = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/projects?featured=true');
+        const response = await fetch('/projects.json'); // Carrega do arquivo estático
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const data: Project[] = await response.json();
-        setFetchedProjects(data.slice(0, 4)); 
+        const allProjects: Project[] = await response.json();
+        setFetchedProjects(allProjects.filter(p => p.featured === true).slice(0, 4)); 
       } catch (e: any) {
         setError(e.message);
       } finally {
@@ -31,7 +31,7 @@ const Portfolio: React.FC<PortfolioProps> = ({ }) => {
       }
     };
 
-    fetchProjects();
+    loadProjects();
   }, []);
 
   const handleProjectClick = (imageUrl: string) => {
