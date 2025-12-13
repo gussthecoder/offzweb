@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ExternalLink } from 'lucide-react';
 import { Project } from '../types';
 import { Link } from 'react-router-dom';
 import ProjectModal from './ProjectModal';
+import { projects } from '../data/projects';
 
 interface PortfolioProps {
 
@@ -11,28 +12,7 @@ interface PortfolioProps {
 const Portfolio: React.FC<PortfolioProps> = ({ }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null);
-  const [fetchedProjects, setFetchedProjects] = useState<Project[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const response = await fetch('http://localhost:3001/api/projects?featured=true');
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data: Project[] = await response.json();
-        setFetchedProjects(data.slice(0, 4)); 
-      } catch (e: any) {
-        setError(e.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchProjects();
-  }, []);
+  const fetchedProjects = projects.slice(0, 4);
 
   const handleProjectClick = (imageUrl: string) => {
     setSelectedImageUrl(imageUrl);
@@ -52,30 +32,25 @@ const Portfolio: React.FC<PortfolioProps> = ({ }) => {
             <h2 className="text-3xl md:text-5xl font-bold mb-6">Projetos Recentes</h2>
             <div className="w-20 h-1 bg-white"></div>
           </div>
-          <Link 
+          <Link
             to="/projects"
             className="text-gray-400 hover:text-white transition-colors flex items-center gap-2 pb-2 group"
           >
-            Ver todos os projetos 
+            Ver todos os projetos
             <ExternalLink className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
 
-        {isLoading ? (
-          <p className="text-gray-400 text-center">Carregando projetos...</p>
-        ) : error ? (
-          <p className="text-red-400 text-center">Erro ao carregar projetos: {error}</p>
-        ) : (
-          <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid md:grid-cols-2 gap-8">
             {fetchedProjects.map((project) => (
-              <div 
-                key={project.id} 
+              <div
+                key={project.id}
                 className="group relative overflow-hidden rounded-2xl aspect-video cursor-pointer"
                 onClick={() => handleProjectClick(project.imageUrl)}
               >
-                <img 
-                  src={project.imageUrl} 
-                  alt={project.title} 
+                <img
+                  src={project.imageUrl}
+                  alt={project.title}
                   className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105 filter grayscale hover:grayscale-0"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8">
@@ -85,9 +60,9 @@ const Portfolio: React.FC<PortfolioProps> = ({ }) => {
               </div>
             ))}
           </div>
-        )}
+
       </div>
-      <ProjectModal 
+      <ProjectModal
         isOpen={isModalOpen}
         imageUrl={selectedImageUrl}
         onClose={handleCloseModal}
