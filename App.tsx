@@ -7,7 +7,6 @@ import Portfolio from './components/Portfolio';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import AllProjects from './components/AllProjects';
-import AdminPanel from './components/AdminPanel';
 
 function App() {
   return (
@@ -26,7 +25,6 @@ function App() {
               </>
             } />
             <Route path="/projects" element={<AllProjects />} />
-            <Route path="/admin" element={<AdminPanel />} />
           </Routes>
         </main>
 
